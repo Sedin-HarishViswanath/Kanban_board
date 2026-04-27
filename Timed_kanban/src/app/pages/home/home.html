@@ -1,0 +1,31 @@
+<main class="page">
+    <header class="top-bar">
+        <div>
+            <p class="muted">Hello, {{ userName }}</p>
+            <h1>Your Projects</h1>
+        </div>
+    </header>
+
+    <section class="create-box">
+        <h2>Create New Project</h2>
+
+        <form (ngSubmit)="createProject()">
+            <input name="projectName" [(ngModel)]="projectName" placeholder="Project name" />
+            <button type="submit">Create</button>
+        </form>
+    </section>
+
+    <section class="projects">
+        @if (projects.length === 0) {
+        <p class="empty">No projects yet. Create one to begin.</p>
+        }
+
+        @for (project of projects; track project.id) {
+        <a class="project-card" [routerLink]="['/project', project.id]">
+            <h2>{{ project.name }}</h2>
+            <p>{{ project.tasks.length }} tasks</p>
+            <p>{{ project.columns.length }} columns</p>
+        </a>
+        }
+    </section>
+</main>
