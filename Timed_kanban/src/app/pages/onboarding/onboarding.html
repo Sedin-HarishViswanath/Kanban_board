@@ -1,0 +1,14 @@
+<main class="center-page">
+  <section class="panel">
+    <h1>Welcome to Personal Kanban</h1>
+    <p>Enter your name to start tracking your project tasks.</p>
+
+    <form (ngSubmit)="saveName()">
+      <label for="name">Your name</label>
+      <input id="name" name="name" [(ngModel)]="name" autocomplete="name" />
+
+      <button type="submit">Continue</button>
+    </form>
+  </section>
+</main>
+
