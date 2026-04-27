@@ -1,0 +1,5 @@
+{
+  "version": 2,
+  "buildCommand": "cd Timed_kanban && npm install && npm run build",
+  "outputDirectory": "Timed_kanban/dist/Timed_kanban/browser"
+}
