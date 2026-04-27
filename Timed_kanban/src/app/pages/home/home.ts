@@ -18,7 +18,7 @@ export class Home implements OnInit {
   constructor(
     private projectService: ProjectService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.userName = this.projectService.getUserName();

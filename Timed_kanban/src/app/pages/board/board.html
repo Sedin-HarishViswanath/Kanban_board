@@ -28,7 +28,7 @@
     </section>
 
     <section class="board">
-      @for (column of project.columns; track column.id) {
+      @for (column of project.columns ?? []; track column.id) {
         <div
           class="column"
           cdkDropList
@@ -74,7 +74,7 @@
                   <div class="stats">
                     <strong>Time breakdown</strong>
 
-                    @for (item of project.columns; track item.id) {
+                    @for (item of project.columns ?? []; track item.id) {
                       @if (timeForTask(task, item.id) > 0) {
                         <p>{{ item.name }}: {{ formatTime(timeForTask(task, item.id)) }}</p>
                       }

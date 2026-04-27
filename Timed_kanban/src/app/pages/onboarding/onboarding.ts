@@ -28,4 +28,3 @@ export class Onboarding {
     this.router.navigateByUrl('/');
   }
 }
-
