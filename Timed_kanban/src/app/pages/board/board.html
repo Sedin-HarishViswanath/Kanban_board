@@ -1,0 +1,119 @@
+@if (project) {
+  <main class="board-page">
+    <header class="hero">
+      <a class="back-link" routerLink="/">Back to projects</a>
+      <h1>Kanban Task Board</h1>
+      <p>{{ project.name }}</p>
+    </header>
+
+    <section class="actions-row">
+      <form class="task-form" (ngSubmit)="addTask()">
+        <input name="taskTitle" [(ngModel)]="taskTitle" placeholder="New task title" />
+        <button type="submit">
+          <span aria-hidden="true">+</span>
+          New Task
+        </button>
+      </form>
+
+      <div class="column-tools">
+        <form class="column-form" (ngSubmit)="addColumn()">
+          <input name="columnName" [(ngModel)]="columnName" placeholder="New column name" />
+          <button type="submit">Add Column</button>
+        </form>
+
+        @if (columnMessage) {
+          <p class="success-message">{{ columnMessage }}</p>
+        }
+      </div>
+    </section>
+
+    <section class="board">
+      @for (column of project.columns; track column.id) {
+        <div
+          class="column"
+          cdkDropList
+          [id]="column.id"
+          [cdkDropListData]="tasksByColumn(column.id)"
+          [cdkDropListConnectedTo]="connectedColumnIds"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div class="column-header">
+            <div>
+              <h2><span></span>{{ column.name }}</h2>
+              <small>{{ tasksByColumn(column.id).length }}</small>
+            </div>
+
+            @if (!column.isLocked) {
+              <div class="column-actions">
+                <button type="button" (click)="editColumn(column)">Edit</button>
+                <button type="button" class="danger" (click)="deleteColumn(column)">Delete</button>
+              </div>
+            }
+          </div>
+
+          <div class="task-list">
+            @for (task of tasksByColumn(column.id); track task.id) {
+              <article class="task-card" cdkDrag [cdkDragData]="task">
+                <div class="task-top">
+                  <h3>{{ task.title }}</h3>
+                  <button
+                    type="button"
+                    class="icon-danger"
+                    title="Delete task"
+                    (click)="deleteTask(task.id)"
+                  >
+                    x
+                  </button>
+                </div>
+
+                <p class="timer">
+                  Time here: {{ formatTime(timeForTask(task, column.id)) }}
+                </p>
+
+                @if (task.currentColumnId === 'completed') {
+                  <div class="stats">
+                    <strong>Time breakdown</strong>
+
+                    @for (item of project.columns; track item.id) {
+                      @if (timeForTask(task, item.id) > 0) {
+                        <p>{{ item.name }}: {{ formatTime(timeForTask(task, item.id)) }}</p>
+                      }
+                    }
+                  </div>
+                }
+              </article>
+            }
+          </div>
+        </div>
+      }
+    </section>
+
+    @if (editingColumn) {
+      <div class="modal-backdrop">
+        <section class="edit-modal" aria-modal="true" role="dialog">
+          <button type="button" class="close-button" (click)="closeEditPopup()">x</button>
+
+          <h2>Edit Column</h2>
+          <p>Rename this column and save your changes.</p>
+
+          <form (ngSubmit)="saveColumnEdit()">
+            <label for="editColumnName">Column name</label>
+            <input
+              id="editColumnName"
+              name="editColumnName"
+              [(ngModel)]="editColumnName"
+              autocomplete="off"
+            />
+
+            <div class="modal-actions">
+              <button type="button" class="secondary-button" (click)="closeEditPopup()">
+                Cancel
+              </button>
+              <button type="submit">Save</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    }
+  </main>
+}
