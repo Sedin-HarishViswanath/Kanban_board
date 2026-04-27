@@ -8,7 +8,7 @@ import { StorageService } from './storage.service';
 export class ProjectService {
   private readonly userKey = 'kanban_user_name';
   private readonly projectsKey = 'kanban_projects';
-
+  
   constructor(private storage: StorageService) {}
 
   getUserName(): string {

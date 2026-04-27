@@ -28,7 +28,7 @@ export class Board implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private projectService: ProjectService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     if (!this.projectService.getUserName()) {
@@ -66,11 +66,11 @@ export class Board implements OnInit, OnDestroy {
   }
 
   get connectedColumnIds(): string[] {
-    return this.project?.columns.map((column) => column.id) || [];
+    return this.project?.columns?.map((column) => column.id) || [];
   }
 
   tasksByColumn(columnId: string): KanbanTask[] {
-    return this.project?.tasks.filter((task) => task.currentColumnId === columnId) || [];
+    return this.project?.tasks?.filter((task) => task.currentColumnId === columnId) || [];
   }
 
   addTask(): void {
@@ -110,7 +110,7 @@ export class Board implements OnInit, OnDestroy {
       return;
     }
 
-    const completedIndex = this.project.columns.findIndex((column) => column.id === 'completed');
+    const completedIndex = this.project?.columns?.findIndex((column) => column.id === 'completed') ?? -1;
     const newColumn: KanbanColumn = {
       id: crypto.randomUUID(),
       name,
@@ -118,7 +118,7 @@ export class Board implements OnInit, OnDestroy {
       isLocked: false,
     };
 
-    const columns = [...this.project.columns];
+    const columns = [...(this.project?.columns || [])];
     columns.splice(completedIndex, 0, newColumn);
 
     this.project = { ...this.project, columns };
@@ -148,9 +148,9 @@ export class Board implements OnInit, OnDestroy {
       return;
     }
 
-    const columns = this.project.columns.map((item) =>
+    const columns = this.project?.columns?.map((item) =>
       item.id === this.editingColumn?.id ? { ...item, name } : item
-    );
+    ) || [];
 
     this.project = { ...this.project, columns };
     this.projectService.saveProject(this.project);
@@ -165,7 +165,7 @@ export class Board implements OnInit, OnDestroy {
 
     const tasksInColumn = this.tasksByColumn(column.id);
     let targetColumnId = 'todo';
-    let columns = this.project.columns;
+    let columns = this.project?.columns || [];
 
     if (tasksInColumn.length > 0) {
       const answer = prompt(
@@ -198,7 +198,7 @@ export class Board implements OnInit, OnDestroy {
     }
 
     const now = Date.now();
-    const tasks = this.project.tasks.map((task) => {
+    const tasks = this.project?.tasks?.map((task) => {
       if (task.currentColumnId !== column.id) {
         return task;
       }
